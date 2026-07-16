@@ -15,7 +15,7 @@ In another terminal:
 
 ```sh
 export VAULT_URL=http://localhost:6000
-export VAULT_TOKEN=change-me
+export INGEST_TOKEN=change-me
 node cli/vault.mjs push ~/Downloads/artifact.html --title "Example" --tags demo,keeper --source chatgpt
 node cli/vault.mjs list
 node cli/vault.mjs bucket a1b2c3d4 understanding
@@ -63,6 +63,6 @@ coolify --context homelab app start "$APP_UUID" --force
 coolify --context homelab app deployments logs "$APP_UUID" --follow
 ```
 
-Configure the existing Cloudflare Tunnel hostname to target the application on port `6000`. Set the same public URL and ingest token locally as `VAULT_URL` and `VAULT_TOKEN`, then verify with `node cli/vault.mjs list`. The gallery is public; protect the tunnel hostname with Cloudflare Access if artifacts are private.
+Configure the existing Cloudflare Tunnel hostname to target the application on port `6000`. Set the same public URL and ingest token locally as `VAULT_URL` and `INGEST_TOKEN`, then verify with `node cli/vault.mjs list`. The gallery is public; protect the tunnel hostname with Cloudflare Access if artifacts are private.
 
 Downloaded artifacts run in a sandboxed iframe without a same-origin identity. Direct artifact responses also receive a CSP sandbox header.
