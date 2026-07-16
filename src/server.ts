@@ -1,6 +1,7 @@
 import { join } from "node:path";
 import { loadEnvFile } from "node:process";
 import { pathToFileURL } from "node:url";
+import { existsSync } from "node:fs";
 import fastifyStatic from "@fastify/static";
 import Fastify from "fastify";
 import { regenerateServiceWorker } from "./lib/service-worker.js";
@@ -9,7 +10,8 @@ import { artifactRoutes } from "./routes/artifacts.js";
 import { galleryRoutes } from "./routes/gallery.js";
 import { manifestRoutes } from "./routes/manifest.js";
 
-loadEnvFile(join(import.meta.dirname, "../.env"));
+const envPath = join(import.meta.dirname, "../.env");
+if (existsSync(envPath)) loadEnvFile(envPath);
 
 declare module "fastify" {
   interface FastifyInstance {
