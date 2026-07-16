@@ -41,9 +41,9 @@ export async function buildApp(
   await app.register(fastifyStatic, {
     root: join(process.cwd(), "public"),
     prefix: "/",
-    setHeaders(response, filePath) {
+    setHeaders(reply, filePath) {
       if (filePath.endsWith("/sw.js"))
-        response.setHeader("Cache-Control", "no-cache");
+        reply.header("Cache-Control", "no-cache");
     },
   });
   await app.register(galleryRoutes);

@@ -1,0 +1,13 @@
+.env
+.git
+.gitignore
+node_modules
+dist
+data
+test
+README.md
+.mise.toml
+public/sw.js
+public/sw.js.map
+public/workbox-*.js
+public/workbox-*.js.map
