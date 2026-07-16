@@ -36,8 +36,8 @@ export function galleryHtml(artifacts: Artifact[], selectedId?: string) {
     .artifact-card:hover, .artifact-card:focus { border-color: #c9d69e; } .artifact-card strong { font-size: 14px; line-height: 1.35; }
     .source, .metadata { font-size: 11px; color: #9ba391; } .source { color: #c9d69e; text-transform: uppercase; } .tags { display: flex; flex-wrap: wrap; gap: 4px; }
     i { font-size: 10px; padding: 3px 5px; background: #293026; color: #c9d69e; font-style: normal; } .viewer-heading { display: flex; justify-content: space-between; gap: 16px; align-items: center; margin: 0 0 14px; }
-    .viewer-heading h2 { margin: 0; font-size: 18px; } .viewer-heading a { color: #c9d69e; font-size: 12px; } iframe { width: 100%; height: calc(100vh - 100px); border: 1px solid #30362d; background: white; }
-    .empty { color: #9ba391; padding: 20px 0; } @media (max-width: 720px) { body { display: block; } aside { border-right: 0; border-bottom: 1px solid #30362d; max-height: 45vh; } main { padding: 16px; } iframe { height: 70vh; } }
+    .viewer-heading h2 { margin: 0; font-size: 18px; } .viewer-heading a { color: #c9d69e; font-size: 12px; } .close-viewer { display: none; } iframe { width: 100%; height: calc(100vh - 100px); border: 1px solid #30362d; background: white; }
+    .empty { color: #9ba391; padding: 20px 0; } @media (max-width: 720px) { body { display: block; } aside { border-right: 0; border-bottom: 0; min-height: 100dvh; } main { display: none; } body.viewer-open { overflow: hidden; } body.viewer-open main { display: block; position: fixed; inset: 0; z-index: 1; padding: 12px; background: #10120f; } body.viewer-open .viewer-heading { margin-bottom: 10px; } .close-viewer { display: inline-block; background: #1b2019; color: #eeeede; border: 1px solid #495245; padding: 7px 9px; font: inherit; font-size: 12px; } .viewer-heading h2 { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; } iframe { height: calc(100dvh - 60px); border: 0; } }
   </style>
 </head>
 <body>
@@ -52,7 +52,7 @@ export function galleryHtml(artifacts: Artifact[], selectedId?: string) {
     <div class="artifact-list">${cards || '<p class="empty">No artifacts match this filter.</p>'}</div>
   </aside>
   <main>
-    ${selected ? `<div class="viewer-heading"><h2 id="artifact-title">${escapeHtml(selected.title)}</h2><a id="open-artifact" href="/artifacts/${selected.id}.html" target="_blank" rel="noopener">Open directly</a></div><iframe id="artifact-viewer" title="${escapeHtml(selected.title)}" sandbox="allow-scripts allow-forms allow-popups allow-downloads" src="/artifacts/${selected.id}.html"></iframe>` : '<p class="empty">Push an HTML file to begin curating.</p>'}
+    ${selected ? `<div class="viewer-heading"><button class="close-viewer" id="close-viewer" type="button">Back</button><h2 id="artifact-title">${escapeHtml(selected.title)}</h2><a id="open-artifact" href="/artifacts/${selected.id}.html" target="_blank" rel="noopener">Open directly</a></div><iframe id="artifact-viewer" title="${escapeHtml(selected.title)}" sandbox="allow-scripts allow-forms allow-popups allow-downloads" src="/artifacts/${selected.id}.html"></iframe>` : '<p class="empty">Push an HTML file to begin curating.</p>'}
   </main>
   <script>
     for (const select of document.querySelectorAll('select')) select.value = new URLSearchParams(location.search).get(select.name) || '';
@@ -60,7 +60,9 @@ export function galleryHtml(artifacts: Artifact[], selectedId?: string) {
       event.preventDefault(); const viewer = document.querySelector('#artifact-viewer'); if (!viewer) return;
       viewer.src = link.href; viewer.title = link.dataset.title; document.querySelector('#artifact-title').textContent = link.dataset.title;
       document.querySelector('#open-artifact').href = link.href;
+      document.body.classList.add('viewer-open');
     });
+    document.querySelector('#close-viewer')?.addEventListener('click', () => document.body.classList.remove('viewer-open'));
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').then((registration) => {
       registration.addEventListener('updatefound', () => { const worker = registration.installing; worker?.addEventListener('statechange', () => { if (worker.state === 'installed' && navigator.serviceWorker.controller) location.reload(); }); });
     });
