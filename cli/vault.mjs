@@ -2,7 +2,7 @@
 import { readFile } from 'node:fs/promises';
 import { basename } from 'node:path';
 
-const vaultUrl = (process.env.VAULT_URL ?? 'http://localhost:3000').replace(/\/$/, '');
+const vaultUrl = (process.env.VAULT_URL ?? 'http://localhost:6000').replace(/\/$/, '');
 const vaultToken = process.env.VAULT_TOKEN;
 const [command, ...arguments_] = process.argv.slice(2);
 
