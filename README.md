@@ -14,7 +14,7 @@ pnpm dev
 In another terminal:
 
 ```sh
-export VAULT_URL=http://localhost:6000
+export VAULT_URL=http://localhost: 3520
 export INGEST_TOKEN=change-me
 node cli/vault.mjs push ~/Downloads/artifact.html --title "Example" --tags demo,keeper --source chatgpt
 node cli/vault.mjs list
@@ -43,7 +43,7 @@ coolify --context homelab app create github \
   --git-repository "<owner>/artifact-vault" \
   --git-branch master \
   --build-pack dockerfile \
-  --ports-exposes 6000 \
+  --ports-exposes  3520 \
   --health-check-enabled \
   --health-check-path / \
   --name artifact-vault \
@@ -63,6 +63,6 @@ coolify --context homelab app start "$APP_UUID" --force
 coolify --context homelab app deployments logs "$APP_UUID" --follow
 ```
 
-Configure the existing Cloudflare Tunnel hostname to target the application on port `6000`. Set the same public URL and ingest token locally as `VAULT_URL` and `INGEST_TOKEN`, then verify with `node cli/vault.mjs list`. The gallery is public; protect the tunnel hostname with Cloudflare Access if artifacts are private.
+Configure the existing Cloudflare Tunnel hostname to target the application on port ` 3520`. Set the same public URL and ingest token locally as `VAULT_URL` and `INGEST_TOKEN`, then verify with `node cli/vault.mjs list`. The gallery is public; protect the tunnel hostname with Cloudflare Access if artifacts are private.
 
 Downloaded artifacts run in a sandboxed iframe without a same-origin identity. Direct artifact responses also receive a CSP sandbox header.

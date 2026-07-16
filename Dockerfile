@@ -10,6 +10,6 @@ RUN npm install --global pnpm@11.12.0 && pnpm install --frozen-lockfile
 COPY . .
 RUN mkdir -p data/artifacts && pnpm build
 
-EXPOSE 6000
+EXPOSE 3520
 
 CMD ["node", "dist/server.js"]

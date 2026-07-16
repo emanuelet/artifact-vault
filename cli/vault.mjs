@@ -5,7 +5,7 @@ import { loadEnvFile } from "node:process";
 
 loadEnvFile(join(import.meta.dirname, "../.env"));
 
-const vaultUrl = (process.env.VAULT_URL ?? "http://localhost:6000").replace(
+const vaultUrl = (process.env.VAULT_URL ?? "http://localhost: 3520").replace(
   /\/$/,
   "",
 );

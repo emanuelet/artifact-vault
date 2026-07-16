@@ -59,5 +59,5 @@ if (
   import.meta.url === pathToFileURL(process.argv[1]).href
 ) {
   const app = await buildApp();
-  await app.listen({ port: Number(process.env.PORT ?? 6000), host: "0.0.0.0" });
+  await app.listen({ port: Number(process.env.PORT ?? 3520), host: "0.0.0.0" });
 }
