@@ -3,7 +3,7 @@ import { createHash } from 'node:crypto';
 import { readdir, readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
-const artifactsDirectory = join('data', 'artifacts');
+const artifactsDirectory = join(process.env.VAULT_DATA_DIR ?? 'data', 'artifacts');
 const artifactEntries = await readdir(artifactsDirectory, { withFileTypes: true }).then(async (entries) => Promise.all(
   entries.filter((entry) => entry.isFile() && entry.name.endsWith('.html')).map(async (entry) => {
     const contents = await readFile(join(artifactsDirectory, entry.name));

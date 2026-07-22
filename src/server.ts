@@ -40,6 +40,7 @@ export async function buildApp(
   );
 
   await ensureStore();
+  await app.regenerateServiceWorker();
   await app.register(fastifyStatic, {
     root: join(process.cwd(), "public"),
     prefix: "/",
