@@ -2,6 +2,7 @@ import { join } from "node:path";
 import { loadEnvFile } from "node:process";
 import { pathToFileURL } from "node:url";
 import { existsSync } from "node:fs";
+import cookie from "@fastify/cookie";
 import fastifyStatic from "@fastify/static";
 import Fastify from "fastify";
 import { regenerateServiceWorker } from "./lib/service-worker.js";
@@ -9,6 +10,7 @@ import { ensureStore } from "./lib/store.js";
 import { artifactRoutes } from "./routes/artifacts.js";
 import { galleryRoutes } from "./routes/gallery.js";
 import { manifestRoutes } from "./routes/manifest.js";
+import { authRoutes, requiresPasskey } from "./routes/auth.js";
 
 const envPath = join(import.meta.dirname, "../.env");
 if (existsSync(envPath)) loadEnvFile(envPath);
@@ -41,6 +43,12 @@ export async function buildApp(
 
   await ensureStore();
   await app.regenerateServiceWorker();
+  await app.register(cookie);
+  app.addHook("onRequest", async (request, reply) => {
+    if (!requiresPasskey(request)) return;
+    if (request.url.startsWith("/api/")) return reply.code(401).send({ error: "passkey authentication required" });
+    return reply.redirect("/auth");
+  });
   await app.register(fastifyStatic, {
     root: join(process.cwd(), "public"),
     prefix: "/",
@@ -49,6 +57,7 @@ export async function buildApp(
         reply.header("Cache-Control", "no-cache");
     },
   });
+  await app.register(authRoutes);
   await app.register(galleryRoutes);
   await app.register(manifestRoutes);
   await app.register(artifactRoutes);

@@ -11,6 +11,7 @@ beforeEach(async () => {
   dataDirectory = await mkdtemp(join(tmpdir(), 'artifact-vault-'));
   process.env.VAULT_DATA_DIR = dataDirectory;
   process.env.INGEST_TOKEN = 'test-token';
+  process.env.WEBAUTHN_DISABLED = 'true';
   const { buildApp } = await import('../src/server.js');
   app = await buildApp({ regenerateServiceWorker: async () => {} });
 });
@@ -20,6 +21,7 @@ afterEach(async () => {
   await rm(dataDirectory, { recursive: true, force: true });
   delete process.env.VAULT_DATA_DIR;
   delete process.env.INGEST_TOKEN;
+  delete process.env.WEBAUTHN_DISABLED;
 });
 
 describe('artifact API', () => {
@@ -74,5 +76,13 @@ describe('artifact API', () => {
     expect(response.statusCode).toBe(200);
     expect(response.body).toContain('Gallery artifact');
     expect(response.body).toContain('sandbox="allow-scripts');
+  });
+
+  it('redirects vault reads to the passkey gate when enabled', async () => {
+    process.env.WEBAUTHN_DISABLED = 'false';
+    const response = await app.inject('/');
+    expect(response.statusCode).toBe(302);
+    expect(response.headers.location).toBe('/auth');
+    process.env.WEBAUTHN_DISABLED = 'true';
   });
 });

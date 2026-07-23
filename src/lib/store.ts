@@ -4,7 +4,7 @@ import type { Manifest } from './types.js';
 
 let manifestQueue = Promise.resolve();
 
-function getDataDirectory() {
+export function getDataDirectory() {
   return process.env.VAULT_DATA_DIR ?? join(process.cwd(), 'data');
 }
 
