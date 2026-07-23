@@ -21,15 +21,21 @@ const { count, size, warnings } = await generateSW({
   modifyURLPrefix: { 'public/': '/' },
   swDest: 'public/sw.js',
   additionalManifestEntries: [
-    { url: '/', revision },
-    { url: '/api/manifest', revision },
+    { url: '/auth', revision },
     ...artifactEntries,
   ],
-  runtimeCaching: [{
-    urlPattern: ({ url }) => url.pathname.startsWith('/artifacts/'),
-    handler: 'CacheFirst',
-    options: { cacheName: 'artifacts-runtime' },
-  }],
+  runtimeCaching: [
+    {
+      urlPattern: ({ url }) => url.pathname === '/' || url.pathname === '/api/manifest',
+      handler: 'NetworkFirst',
+      options: { cacheName: 'vault-shell' },
+    },
+    {
+      urlPattern: ({ url }) => url.pathname.startsWith('/artifacts/'),
+      handler: 'CacheFirst',
+      options: { cacheName: 'artifacts-runtime' },
+    },
+  ],
   maximumFileSizeToCacheInBytes: 10 * 1024 * 1024,
   skipWaiting: true,
   clientsClaim: true,
