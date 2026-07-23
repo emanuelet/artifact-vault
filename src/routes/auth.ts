@@ -25,7 +25,7 @@ function setSessionCookie(reply: { setCookie: (name: string, value: string, opti
   reply.setCookie('vault_session', session, {
     httpOnly: true,
     sameSite: 'strict',
-    secure: process.env.NODE_ENV === 'production',
+    secure: process.env.WEBAUTHN_ORIGIN?.startsWith('https://') ?? false,
     path: '/',
     maxAge: 7 * 24 * 60 * 60,
   });
