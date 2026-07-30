@@ -1,29 +1,43 @@
-import type { Artifact } from '../lib/types.js';
+import type { Artifact } from "../lib/types.js";
 
 function escapeHtml(value: string) {
-  return value.replace(/[&<>'"]/g, (character) => ({
-    '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;',
-  })[character] as string);
+	return value.replace(
+		/[&<>'"]/g,
+		(character) =>
+			({
+				"&": "&amp;",
+				"<": "&lt;",
+				">": "&gt;",
+				"'": "&#39;",
+				'"': "&quot;",
+			})[character] as string,
+	);
 }
 
 export function galleryHtml(artifacts: Artifact[], selectedId?: string) {
-  const selected = artifacts.find((artifact) => artifact.id === selectedId) ?? artifacts[0];
-  const tags = [...new Set(artifacts.flatMap((artifact) => artifact.tags))].sort();
-  const cards = artifacts.map((artifact) => `
+	const selected =
+		artifacts.find((artifact) => artifact.id === selectedId) ?? artifacts[0];
+	const tags = [
+		...new Set(artifacts.flatMap((artifact) => artifact.tags)),
+	].sort();
+	const cards = artifacts
+		.map(
+			(artifact) => `
     <a class="artifact-card" data-artifact-link href="/artifacts/${artifact.id}.html" data-title="${escapeHtml(artifact.title)}">
       <span class="source">${escapeHtml(artifact.source)}</span>
       <strong>${escapeHtml(artifact.title)}</strong>
       <span class="metadata">${new Date(artifact.createdAt).toLocaleDateString()} · ${Math.ceil(artifact.sizeBytes / 1024)} KB</span>
-      <span class="tags">${artifact.tags.map((tag) => `<i>${escapeHtml(tag)}</i>`).join('')}</span>
-    </a>`).join('');
+      <span class="tags">${artifact.tags.map((tag) => `<i>${escapeHtml(tag)}</i>`).join("")}</span>
+    </a>`,
+		)
+		.join("");
 
-  return `<!doctype html>
+	return `<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#10120f">
-  <link rel="manifest" href="/manifest.webmanifest">
   <title>Artifact Vault</title>
   <style>
     :root { color-scheme: dark; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; background: #10120f; color: #eeeede; }
@@ -43,10 +57,10 @@ export function galleryHtml(artifacts: Artifact[], selectedId?: string) {
 <body>
   <aside>
     <h1>Artifact Vault</h1>
-    <p class="subtitle">${artifacts.length} curated artifact${artifacts.length === 1 ? '' : 's'} · offline-ready</p>
+     <p class="subtitle">${artifacts.length} curated artifact${artifacts.length === 1 ? "" : "s"}</p>
     <form method="get">
       <select name="bucket" aria-label="Bucket"><option value="">All buckets</option><option value="operational">Operational</option><option value="understanding">Understanding</option></select>
-      <select name="tag" aria-label="Tag"><option value="">All tags</option>${tags.map((tag) => `<option value="${escapeHtml(tag)}">${escapeHtml(tag)}</option>`).join('')}</select>
+      <select name="tag" aria-label="Tag"><option value="">All tags</option>${tags.map((tag) => `<option value="${escapeHtml(tag)}">${escapeHtml(tag)}</option>`).join("")}</select>
       <button type="submit">Filter</button>
     </form>
     <div class="artifact-list">${cards || '<p class="empty">No artifacts match this filter.</p>'}</div>
@@ -62,10 +76,7 @@ export function galleryHtml(artifacts: Artifact[], selectedId?: string) {
       document.querySelector('#open-artifact').href = link.href;
       document.body.classList.add('viewer-open');
     });
-    document.querySelector('#close-viewer')?.addEventListener('click', () => document.body.classList.remove('viewer-open'));
-    if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').then((registration) => {
-      registration.addEventListener('updatefound', () => { const worker = registration.installing; worker?.addEventListener('statechange', () => { if (worker.state === 'installed' && navigator.serviceWorker.controller) location.reload(); }); });
-    });
+     document.querySelector('#close-viewer')?.addEventListener('click', () => document.body.classList.remove('viewer-open'));
   </script>
 </body>
 </html>`;

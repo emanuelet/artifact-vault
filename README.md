@@ -1,6 +1,6 @@
 # Artifact Vault
 
-Self-hosted, offline-first gallery for curated standalone HTML artifacts.
+Self-hosted gallery for curated standalone HTML artifacts, with an Android Capacitor companion that explicitly syncs artifacts for offline use.
 
 ## Local use
 
@@ -8,13 +8,14 @@ Self-hosted, offline-first gallery for curated standalone HTML artifacts.
 mise install
 pnpm install
 export INGEST_TOKEN=change-me
+export VAULT_READ_TOKEN=read-only-change-me
 pnpm dev
 ```
 
 In another terminal:
 
 ```sh
-export VAULT_URL=http://localhost: 3520
+export VAULT_URL=http://localhost:3520
 export INGEST_TOKEN=change-me
 node cli/vault.mjs push ~/Downloads/artifact.html --title "Example" --tags demo,keeper --source chatgpt
 node cli/vault.mjs list
@@ -52,17 +53,31 @@ coolify --context homelab app create github \
 
 For a public repository, substitute `app create public`, use its full repository URL in `--git-repository`, and omit `--github-app-uuid`.
 
-After creation, persist the vault and set the runtime-only ingest secret. The volume must mount at `/app/data`.
+After creation, persist the vault and set the runtime-only ingest and mobile read secrets. The volume must mount at `/app/data`.
 
 ```sh
 export APP_UUID="<application-uuid>"
 export INGEST_TOKEN="$(openssl rand -hex 32)"
+export VAULT_READ_TOKEN="$(openssl rand -hex 32)"
 coolify --context homelab app storage create "$APP_UUID" --type persistent --name artifact-vault-data --mount-path /app/data
 coolify --context homelab app env create "$APP_UUID" --key INGEST_TOKEN --value "$INGEST_TOKEN" --runtime --build-time=false --is-literal
+coolify --context homelab app env create "$APP_UUID" --key VAULT_READ_TOKEN --value "$VAULT_READ_TOKEN" --runtime --build-time=false --is-literal
 coolify --context homelab app start "$APP_UUID" --force
 coolify --context homelab app deployments logs "$APP_UUID" --follow
 ```
 
-Configure the existing Cloudflare Tunnel hostname to target the application on port ` 3520`. Set the same public URL and ingest token locally as `VAULT_URL` and `INGEST_TOKEN`, then verify with `node cli/vault.mjs list`. The gallery is public; protect the tunnel hostname with Cloudflare Access if artifacts are private.
+Configure the existing Cloudflare Tunnel hostname to target the application on port `3520`. Set the same public URL and ingest token locally as `VAULT_URL` and `INGEST_TOKEN`, then verify with `node cli/vault.mjs list`. Browser viewing remains passkey-gated; `VAULT_READ_TOKEN` is only for the mobile app's manifest and artifact downloads.
 
 Downloaded artifacts run in a sandboxed iframe without a same-origin identity. Direct artifact responses also receive a CSP sandbox header.
+
+## Android companion
+
+The mobile app stores a mirror of the remote manifest and its HTML files in private on-device storage. It never calls the vault while viewing synced artifacts.
+
+Install Android Studio and an Android SDK, then set `ANDROID_HOME` to that SDK path. The repository pins JDK 21 through mise for Gradle compatibility.
+
+```sh
+pnpm --dir mobile android:run
+```
+
+Configure the vault URL and `VAULT_READ_TOKEN` in the app, sync while online, then verify artifacts after enabling airplane mode. `pnpm --dir mobile android:sync` rebuilds the web bundle and copies it into the Android project.

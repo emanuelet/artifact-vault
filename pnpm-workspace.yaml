@@ -1,2 +1,5 @@
+packages:
+  - mobile
+
 allowBuilds:
   esbuild: true

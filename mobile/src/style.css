@@ -1,0 +1,121 @@
+:root {
+	color-scheme: dark;
+	font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+	background: #10120f;
+	color: #eeeede;
+}
+* {
+	box-sizing: border-box;
+}
+body {
+	margin: 0;
+	min-width: 320px;
+}
+#app {
+	display: grid;
+	gap: 16px;
+	max-width: 780px;
+	margin: auto;
+	padding: 20px;
+}
+section,
+.app-header {
+	border: 1px solid #30362d;
+	background: #151914;
+	padding: 16px;
+}
+h1,
+h2,
+p {
+	margin-top: 0;
+}
+h1 {
+	margin-bottom: 4px;
+	font-size: 22px;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+h2 {
+	font-size: 16px;
+}
+p,
+.artifact-card span {
+	color: #9ba391;
+	font-size: 12px;
+}
+button,
+input {
+	width: 100%;
+	border: 1px solid #495245;
+	background: #1b2019;
+	color: inherit;
+	font: inherit;
+	padding: 11px;
+}
+button {
+	background: #c9d69e;
+	color: #10120f;
+	cursor: pointer;
+	font-weight: 700;
+}
+button:disabled {
+	cursor: wait;
+	opacity: 0.6;
+}
+form,
+.artifact-list {
+	display: grid;
+	gap: 10px;
+}
+label {
+	display: grid;
+	gap: 6px;
+	font-size: 12px;
+	color: #9ba391;
+}
+.artifact-card {
+	display: grid;
+	gap: 6px;
+	text-align: left;
+	background: #1b2019;
+	color: #eeeede;
+}
+.artifact-card strong {
+	font-size: 14px;
+}
+.artifact-card .tags {
+	color: #c9d69e;
+}
+.status {
+	min-height: 1.2em;
+	margin: 12px 0 0;
+}
+.error {
+	color: #ff9d94;
+}
+.viewer {
+	display: grid;
+	gap: 12px;
+	min-height: calc(100dvh - 40px);
+}
+.viewer header {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+.viewer header button {
+	width: auto;
+}
+.viewer h2 {
+	margin: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+iframe {
+	flex: 1;
+	width: 100%;
+	min-height: 70dvh;
+	border: 0;
+	background: white;
+}

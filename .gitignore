@@ -1,9 +1,10 @@
 node_modules/
 dist/
-public/sw.js
-public/sw.js.map
-public/workbox-*.js
-public/workbox-*.js.map
+mobile/node_modules/
+mobile/dist/
+mobile/android/.gradle/
+mobile/android/app/build/
+mobile/android/local.properties
 data/artifacts/
 data/manifest.json
 *.log

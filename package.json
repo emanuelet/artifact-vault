@@ -4,14 +4,14 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "tsc && node build-sw.mjs",
-    "build:sw": "node build-sw.mjs",
+    "build": "tsc",
     "dev": "tsx watch src/server.ts",
     "start": "node dist/server.js",
     "test": "vitest run"
   },
   "dependencies": {
     "@fastify/cookie": "^11.1.2",
+    "@fastify/cors": "^11.2.0",
     "@fastify/static": "^10.1.0",
     "@simplewebauthn/browser": "^13.3.0",
     "@simplewebauthn/server": "^13.3.2",
@@ -23,8 +23,7 @@
     "@types/node": "26.1.1",
     "tsx": "^4.23.1",
     "typescript": "^5.9.x",
-    "vitest": "^4.1.10",
-    "workbox-build": "7.4.1"
+    "vitest": "^4.1.10"
   },
   "engines": {
     "node": ">=20"
